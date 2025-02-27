@@ -1,5 +1,5 @@
 <?php
-$dsn = 'mysql:dbname=twitter2;host=127.0.0.1';
+$dsn = 'mysql:dbname=twitter;host=127.0.0.1';
 $user = 'root';
 $password = '';
 
