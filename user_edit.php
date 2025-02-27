@@ -35,7 +35,7 @@ if(!empty($_POST)){
       $stmt->execute();
       $count = $stmt->fetchColumn();
       if($count > 0) {
-        $_SESSION['message'] = 'このメールアドレスは既に使用されています';
+        $_SESSION['error_message'] = 'このメールアドレスは既に使用されています';
         header('Location: user_edit.php');
         exit();
       } else {
@@ -57,7 +57,7 @@ if(!empty($_POST)){
     header('Location: user_edit.php');
     exit();
   } else {
-    $_SESSION['message'] = '変更する項目を入力してください';
+    $_SESSION['error_message'] = '変更する項目を入力してください';
     header('Location: user_edit.php');
     exit();
   }
@@ -83,6 +83,14 @@ if(!empty($_POST)){
         <?php 
           echo htmlspecialchars($_SESSION['message']);
           unset($_SESSION['message']); 
+        ?>
+      </div>
+    <?php endif; ?>
+    <?php if(isset($_SESSION['error_message'])): ?>
+      <div class="alert alert-danger w-50">
+        <?php 
+          echo htmlspecialchars($_SESSION['error_message']);
+          unset($_SESSION['error_message']); 
         ?>
       </div>
     <?php endif; ?>

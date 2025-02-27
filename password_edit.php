@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once('db_connect.php');
+$error_message = '';
 $id = $_SESSION['id'];
 $sql = 'SELECT users.password
 FROM users
@@ -13,17 +14,21 @@ if(!empty($_POST['submit'])){
   $hashed= hash('sha256', $_POST['password']);
   $new_password = $_POST['new_password'];
   $new = hash('sha256', $new_password);
-  if($hashed == $password['password']){
+  if(strlen($new_password) < 8){
+    $error_message = "パスワードは8文字以上で入力してください";
+  }
+  else if($hashed == $password['password']){
     $sql = 'UPDATE users SET password = :new
     WHERE users.id = :id';
     $stmt = $dbh->prepare($sql);
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
     $stmt->bindValue(":new", $new, PDO::PARAM_STR);
     $stmt->execute();
-    header('location:welcome.php');
-    exit;
+    $_SESSION['message'] = "パスワード変更に成功しました。";
+    header('location:password_edit.php');
+    exit();
   }else{
-    $msg = "password変更に失敗しました。";
+    $error_message = "password変更に失敗しました。";
   }
 }
 ?>
@@ -42,17 +47,25 @@ if(!empty($_POST['submit'])){
   <?php include 'header.php'?>
 <main>
   <div class="container">
-    <h3 class="py-5">会員情報を編集する</h3>
-    <?php if(!empty($msg)):?>
-      <div class="alert alert-danger mt-4">
-        <?php echo htmlspecialchars($msg);?>
+    <h3 class="py-5">パスワードを変更する</h3>
+    <?php if(!empty($_SESSION['message'])):?>
+      <div class="alert alert-info">
+        <?php 
+          echo htmlspecialchars($_SESSION['message']);
+          unset($_SESSION['message']);
+        ?>
       </div>        
     <?php endif;?>
+    <?php if(!empty($error_message)):?>
+    <div class="alert alert-danger">
+        <?php echo htmlspecialchars($error_message); ?>
+      </div>
+    <?php endif; ?>
     <form action=""  method="post" class="loginform">
     <div class="mb-5 w-50">
       <label for="basic-url" class="form-label">新しいパスワードを入力してください</label>
       <div class="input-group">
-        <input type="password" name="new_password" class="form-control" placeholder="new_password" aria-label="password" aria-describedby="basic-addon1">
+        <input type="password" name="new_password" class="form-control" placeholder="new_password(8文字以上で入力してください)" aria-label="password" aria-describedby="basic-addon1">
       </div>
     </div>
     <div class="mb-5 w-50">

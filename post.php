@@ -10,7 +10,7 @@ if(!empty($_POST['submit'])){
     $stmt->bindValue(":tweet", $tweet, PDO::PARAM_STR);
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
-    header('location:welcome.php');
+    header('location:board.php');
     exit;
   }
 }
