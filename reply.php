@@ -21,7 +21,7 @@ if(!empty($_POST['submit'])){
     $stmt->bindValue(":tweet_id", $tweet_id, PDO::PARAM_STR);
     $stmt->bindValue(":reply", $reply, PDO::PARAM_STR);
     $stmt->execute();
-    header('location:board.php');
+    header('location:article.php');
     exit;
   }
 }
